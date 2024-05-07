@@ -11,3 +11,17 @@ services:
       - ./conf/fluent-bit.conf:/etc/fluent-bit/fluent-bit.conf
       - ./conf/parsers.conf:/etc/fluent-bit/parsers.conf
       - ./logs:/var/logs
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
