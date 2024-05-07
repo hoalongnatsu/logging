@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  log:
+    image: cr.fluentbit.io/fluent/fluent-bit:3.0.3
+    container_name: fluentbit
+    command:
+      - -c
+      - /etc/fluent-bit/fluent-bit.conf
+    volumes:
+      - ./conf/fluent-bit.conf:/etc/fluent-bit/fluent-bit.conf
+      - ./conf/parsers.conf:/etc/fluent-bit/parsers.conf
+      - ./logs:/var/logs
