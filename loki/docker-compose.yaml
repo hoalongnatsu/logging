@@ -1,7 +1,4 @@
-version: "3"
-
-networks:
-  loki:
+version: "3.8"
 
 services:
   loki:
@@ -9,8 +6,8 @@ services:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - loki
+    volumes:
+      - ./conf/local-config.yaml:/etc/loki/local-config.yaml
   grafana:
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -18,5 +15,3 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
-    networks:
-      - loki
