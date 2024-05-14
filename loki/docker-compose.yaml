@@ -1,6 +1,16 @@
 version: "3.8"
 
 services:
+  log:
+    image: cr.fluentbit.io/fluent/fluent-bit:3.0.3
+    container_name: fluentbit
+    command:
+      - -c
+      - /etc/fluent-bit/fluent-bit.conf
+    volumes:
+      - ./conf/fluent-bit.conf:/etc/fluent-bit/fluent-bit.conf
+      - ./conf/parsers.conf:/etc/fluent-bit/parsers.conf
+      - ./logs:/var/logs
   loki:
     image: grafana/loki:2.9.2
     ports:
@@ -15,3 +25,17 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
